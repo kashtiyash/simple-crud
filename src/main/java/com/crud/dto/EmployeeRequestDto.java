@@ -1,25 +1,13 @@
-package com.crud.models;
+package com.crud.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 @Data
-@Entity
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+public class EmployeeRequestDto {
 
     @NotBlank(message = "First name cannot be blank.")
     private String firstName;
@@ -37,6 +25,4 @@ public class Employee {
 
     @NotBlank(message = "Designation cannot be empty.")
     private String designation;
-
-    private LocalDateTime createdAt;
 }

@@ -1,7 +1,9 @@
 package com.crud.controller;
 
-import com.crud.models.Employee;
+import com.crud.dto.EmployeeRequestDto;
+import com.crud.dto.EmployeeResponseDto;
 import com.crud.services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,31 +16,39 @@ import java.util.UUID;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Employee>> findAll() {
-        List<Employee> employeeList = employeeService.findAllEmployees();
+    public ResponseEntity<List<EmployeeResponseDto>> findAll() {
+        List<EmployeeResponseDto> employeeList = employeeService.findAllEmployees();
         return new ResponseEntity<>(employeeList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> findById(@PathVariable UUID id) {
-        Employee employee = employeeService.findById(id);
+    public ResponseEntity<EmployeeResponseDto> findById(@PathVariable UUID id) {
+        EmployeeResponseDto employee = employeeService.findById(id);
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Employee> create(@RequestBody Employee employee) {
-        employee = employeeService.save(employee);
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+    public ResponseEntity<EmployeeResponseDto> create(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
+        EmployeeResponseDto employeeResponseDto = employeeService.save(employeeRequestDto);
+        return new ResponseEntity<>(employeeResponseDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Employee> deleteEmployee(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable UUID id) {
         employeeService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable UUID id, @Valid
+    @RequestBody EmployeeRequestDto employeeRequestDto) {
+        EmployeeResponseDto updatedEmployee = employeeService.update(id, employeeRequestDto);
+        return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
 }
